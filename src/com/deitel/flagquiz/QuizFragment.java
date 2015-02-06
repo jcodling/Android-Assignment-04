@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -47,6 +47,8 @@ public class QuizFragment extends Fragment
    private int totalGuesses; // number of guesses made
    private int correctAnswers; // number of correct guesses
    private int correctFirstTry; // number of correct first guesses
+   private int totalScore; // total score across all games
+   private int gameScore; // score for current game
    private boolean firstTry; // is this the first try of the round
    private int guessRows; // number of rows displaying guess Buttons
    private SecureRandom random; // used to randomize the quiz
@@ -59,7 +61,8 @@ public class QuizFragment extends Fragment
    private TextView answerTextView; // displays Correct! or Incorrect!
    
    // configures the QuizFragment when its View is created
-   @Override
+   @SuppressLint("TrulyRandom")
+@Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState)
    {
@@ -99,6 +102,8 @@ public class QuizFragment extends Fragment
             button.setOnClickListener(guessButtonListener);
          }
       }  
+      
+      totalScore = 0; // reset the score for all games to zero at beginning
       
       // set questionNumberTextView's text
       questionNumberTextView.setText(
@@ -154,8 +159,11 @@ public class QuizFragment extends Fragment
          Log.e(TAG, "Error loading image file names", exception);
       } 
       
+      totalScore += gameScore; // Add the last game score to the total score for all games
+      
       correctAnswers = 0; // reset the number of correct answers made
       correctFirstTry = 0; // reset correct guess on first try counter
+      gameScore = 0; // reset the current game score
       firstTry = true; // reset is this the first try
       totalGuesses = 0; // reset the total number of guesses the user made
       quizCountriesList.clear(); // clear prior list of quiz countries
@@ -269,8 +277,11 @@ public class QuizFragment extends Fragment
          {
             ++correctAnswers; // increment the number of correct answers
             
+            gameScore += 1; // Add 1 point for each correct answer
+            
             if (firstTry) {
             	++correctFirstTry;
+            	gameScore += 9; // Add 9 points for correct first answer for 10 total
             }
 
             // display correct answer in green text
@@ -297,7 +308,11 @@ public class QuizFragment extends Fragment
                         
                         builder.setMessage(
                            getResources().getString(R.string.results, 
-                           totalGuesses, correctFirstTry, (1000 / (double) totalGuesses)));
+                           totalGuesses,
+                           correctFirstTry,
+                           gameScore,
+                           totalScore,
+                           (1000 / (double) totalGuesses)));
                         
                         // "Reset Quiz" Button                              
                         builder.setPositiveButton(R.string.reset_quiz,

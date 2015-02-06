@@ -9,7 +9,7 @@
     <string name="world_regions">Continents</string>
     <string name="world_regions_description">Continents to use in the quiz</string>
     <string name="guess_country">Select the Country</string>
-    <string name="results">%1$d guesses, %2$d on the first try, %3$.02f%% correct</string>
+    <string name="results">%1$d guesses, %2$d on the first try, Game score: %3$d, Total score: %4$d, %5$.02f%% correct</string>
     <string name="incorrect_answer">Incorrect!</string>
     <string name="default_region_message">Setting North America as the default region. One region must be selected.</string>
     <string name="restarting_quiz">Quiz will restart with your new settings</string>
